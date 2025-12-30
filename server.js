@@ -38,7 +38,13 @@ app.get('/', (req, res) => {
     }
   });
 });
-
+// Add CORS to your server
+const cors = require('cors');
+app.use(cors({
+  origin: '*', // Allow all origins for testing
+  methods: ['GET', 'POST'],
+  allowedHeaders: ['Content-Type']
+}));
 // Upload video endpoint
 app.post('/upload', upload.single('video'), (req, res) => {
   if (!req.file) return res.status(400).json({ error: 'No video uploaded' });
