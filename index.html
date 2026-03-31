@@ -1,0 +1,804 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>✨ Munga Clone — Your Magical Bestie Clone ✨</title>
+  <style>
+    /* DREAMY BESTIE THEME */
+    :root {
+      --primary: #f472b6;
+      --primary-dark: #ec489a;
+      --secondary: #a78bfa;
+      --accent: #fbbf24;
+      --bg-gradient-start: #fdf4ff;
+      --bg-gradient-end: #fae8ff;
+      --glass: rgba(255, 245, 250, 0.92);
+      --text-dark: #831843;
+      --text-muted: #be185d;
+      --user-msg-start: #f9a8d4;
+      --user-msg-end: #f472b6;
+      --ai-msg-bg: #fff0f7;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', 'Quicksand', 'Poppins', system-ui, sans-serif;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--bg-gradient-start), var(--bg-gradient-end));
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '💖✨🌸💫🌟🎀';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      font-size: 28px;
+      opacity: 0.08;
+      pointer-events: none;
+      animation: floatAround 50s linear infinite;
+    }
+
+    @keyframes floatAround {
+      0% { transform: translate(0, 0) rotate(0deg); }
+      100% { transform: translate(30px, 30px) rotate(5deg); }
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 850px;
+      background: var(--glass);
+      backdrop-filter: blur(12px);
+      border-radius: 2rem;
+      box-shadow: 0 25px 50px -12px rgba(236, 72, 153, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.6);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      height: 90vh;
+      min-height: 600px;
+      z-index: 2;
+      position: relative;
+    }
+
+    .secret-icon {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(4px);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.4rem;
+      z-index: 100;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(244, 114, 182, 0.5);
+      color: var(--primary-dark);
+    }
+
+    .secret-icon:hover {
+      background: rgba(244, 114, 182, 0.3);
+      transform: scale(1.1);
+    }
+
+    .archive-btn {
+      position: absolute;
+      top: 15px;
+      left: 20px;
+      width: 40px;
+      height: 40px;
+      background: rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(4px);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 1.2rem;
+      z-index: 100;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(244, 114, 182, 0.5);
+      color: var(--primary-dark);
+      text-decoration: none;
+    }
+
+    .archive-btn:hover {
+      background: rgba(244, 114, 182, 0.3);
+      transform: scale(1.1);
+    }
+
+    .api-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(8px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .api-modal.active {
+      display: flex;
+    }
+
+    .api-modal-content {
+      background: linear-gradient(135deg, #fff5f8, #fff0f5);
+      padding: 2rem;
+      border-radius: 2rem;
+      max-width: 450px;
+      width: 90%;
+      text-align: center;
+      box-shadow: 0 25px 45px rgba(0, 0, 0, 0.2);
+      border: 2px solid rgba(244, 114, 182, 0.5);
+    }
+
+    .api-modal-content h3 {
+      color: var(--text-dark);
+      margin-bottom: 1rem;
+    }
+
+    .api-modal-content input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #fbcfe8;
+      border-radius: 2rem;
+      margin-bottom: 1rem;
+      font-size: 0.9rem;
+      outline: none;
+    }
+
+    .api-modal-content button {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 2rem;
+      cursor: pointer;
+      font-weight: 600;
+      margin: 0 5px;
+    }
+
+    header {
+      background: linear-gradient(135deg, var(--primary), var(--secondary), #c084fc);
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    header h1 {
+      font-size: 1.8rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, #fff, #ffe4f2);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .bestie-badge {
+      display: inline-block;
+      background: rgba(255,255,240,0.3);
+      padding: 0.2rem 1rem;
+      border-radius: 40px;
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+      color: #fff0f7;
+    }
+
+    .status-bar {
+      background: rgba(255, 235, 245, 0.9);
+      padding: 0.5rem 1rem;
+      font-size: 0.75rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(244, 114, 182, 0.2);
+    }
+
+    .status-badge {
+      background: #fbcfe8;
+      padding: 0.2rem 0.8rem;
+      border-radius: 40px;
+      font-size: 0.7rem;
+      font-weight: 600;
+    }
+
+    #chat-box {
+      flex: 1;
+      padding: 1.5rem;
+      overflow-y: auto;
+      background: rgba(255, 248, 250, 0.5);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      scroll-behavior: smooth;
+    }
+
+    #chat-box::-webkit-scrollbar {
+      width: 6px;
+    }
+    #chat-box::-webkit-scrollbar-track {
+      background: #ffe4f0;
+      border-radius: 10px;
+    }
+    #chat-box::-webkit-scrollbar-thumb {
+      background: var(--primary);
+      border-radius: 10px;
+    }
+
+    .message {
+      max-width: 85%;
+      padding: 0.9rem 1.3rem;
+      border-radius: 1.8rem;
+      font-size: 0.95rem;
+      line-height: 1.45;
+      word-wrap: break-word;
+      animation: messagePop 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    @keyframes messagePop {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .user-message {
+      align-self: flex-end;
+      background: linear-gradient(135deg, var(--user-msg-start), var(--user-msg-end));
+      color: white;
+      border-bottom-right-radius: 0.5rem;
+    }
+
+    .ai-message {
+      align-self: flex-start;
+      background: var(--ai-msg-bg);
+      border: 1px solid rgba(244, 114, 182, 0.3);
+      color: var(--text-dark);
+      border-bottom-left-radius: 0.5rem;
+    }
+
+    .typing-indicator {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: rgba(255, 240, 247, 0.95);
+      padding: 0.6rem 1.2rem;
+      border-radius: 2rem;
+      font-size: 0.85rem;
+      color: var(--primary-dark);
+      width: fit-content;
+      margin-left: 1rem;
+      margin-bottom: 0.5rem;
+      display: none;
+    }
+
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--primary);
+      border-radius: 50%;
+      display: inline-block;
+      animation: bounce 0.6s infinite alternate;
+    }
+
+    @keyframes bounce {
+      0% { transform: translateY(0); opacity: 0.4; }
+      100% { transform: translateY(-5px); opacity: 1; }
+    }
+
+    .input-area {
+      padding: 1.2rem;
+      background: rgba(255, 255, 255, 0.95);
+      border-top: 1px solid rgba(244, 114, 182, 0.3);
+      display: flex;
+      gap: 0.8rem;
+    }
+
+    .input-area input {
+      flex: 1;
+      padding: 0.9rem 1.4rem;
+      border: 2px solid #fbcfe8;
+      border-radius: 3rem;
+      outline: none;
+      font-size: 0.95rem;
+    }
+
+    .input-area input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(244, 114, 182, 0.2);
+    }
+
+    .input-area button {
+      padding: 0.9rem 1.8rem;
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      border: none;
+      border-radius: 3rem;
+      cursor: pointer;
+      font-weight: 700;
+      transition: all 0.2s;
+    }
+
+    .input-area button:hover:not(:disabled) {
+      transform: scale(1.02);
+    }
+
+    .input-area button:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .footer-note {
+      text-align: center;
+      padding: 0.6rem;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      background: rgba(255, 240, 247, 0.8);
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 0.8rem; }
+      .app-container { height: 95vh; }
+      .message { max-width: 90%; font-size: 0.88rem; }
+      header h1 { font-size: 1.3rem; }
+      .secret-icon { top: 10px; right: 15px; width: 35px; height: 35px; font-size: 1.2rem; }
+      .archive-btn { top: 10px; left: 15px; width: 35px; height: 35px; font-size: 1rem; }
+    }
+  </style>
+  
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getDatabase, ref, push, onChildAdded, query, limitToLast, orderByChild } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js";
+    
+    // Firebase Configuration - REPLACE WITH YOUR ACTUAL FIREBASE CONFIG
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyB2mQNeygEwdWFCnHJnw9wlqHWKmXlfe38",
+  authDomain: "taptap-377d9.firebaseapp.com",
+  databaseURL: "https://taptap-377d9-default-rtdb.firebaseio.com",
+  projectId: "taptap-377d9",
+  storageBucket: "taptap-377d9.firebasestorage.app",
+  messagingSenderId: "146364410143",
+  appId: "1:146364410143:web:3ce902bdcaeb954091682a",
+  measurementId: "G-LRJ2TK7CDH"
+};
+    // Initialize Firebase
+    const app = initializeApp(firebaseConfig);
+    const database = getDatabase(app);
+    const messagesRef = ref(database, 'chats');
+    
+    window.firebaseDB = database;
+    window.firebaseRef = messagesRef;
+    window.firebasePush = push;
+    window.firebaseOnChildAdded = onChildAdded;
+    window.firebaseQuery = query;
+    window.firebaseOrderByChild = orderByChild;
+    window.firebaseLimitToLast = limitToLast;
+  </script>
+</head>
+<body>
+
+<div class="app-container">
+  <a href="archive.html" class="archive-btn" title="View Chat History">📜</a>
+  <div class="secret-icon" id="secretIcon" title="Configure API Key">🔑</div>
+
+  <header>
+    <h1>✨ Your Bestie's Clone ✨</h1>
+    <div class="bestie-badge">💕 Always here for you, bestie 💕</div>
+  </header>
+
+  <div class="status-bar">
+    <span>🎀 MUNGA AI — Your Personal Bestie</span>
+    <span class="status-badge" id="apiStatusDisplay">🔑 API Not Set</span>
+  </div>
+
+  <div id="chat-box">
+    <div class="message ai-message">
+      🌸 Heyy bestie! I'm MUNGA — your magical AI clone! 💖<br>
+      Click the 🔑 icon to set up your Gemini API key and let's chat! ✨
+    </div>
+  </div>
+  
+  <div class="typing-indicator" id="typingIndicator">
+    <span>Munga is typing</span>
+    <span class="typing-dot"></span>
+    <span class="typing-dot"></span>
+    <span class="typing-dot"></span>
+  </div>
+
+  <div class="input-area">
+    <input type="text" id="userInput" placeholder="Tell me something, bestie..." disabled />
+    <button id="sendBtn" disabled>✨ Send</button>
+  </div>
+  <div class="footer-note">
+    💕 Click 🔑 for Gemini API key • Get one free at aistudio.google.com • 📜 View chat history
+  </div>
+</div>
+
+<div id="apiModal" class="api-modal">
+  <div class="api-modal-content">
+    <h3>🔐 Configure API Key</h3>
+    <p>✨ Get your free Gemini API key from <a href="https://aistudio.google.com/app/apikey" target="_blank" style="color: #ec489a;">Google AI Studio</a> ✨</p>
+    <input type="password" id="apiKeyInput" placeholder="Paste your Gemini API Key here" />
+    <div>
+      <button id="saveApiKeyBtn">💾 Save & Activate</button>
+      <button id="closeModalBtn" class="close-modal">Cancel</button>
+    </div>
+    <p style="font-size: 0.7rem; margin-top: 12px;">🔒 Your key is stored safely in your browser</p>
+  </div>
+</div>
+
+<script>
+  // DOM Elements
+  const chatBox = document.getElementById('chat-box');
+  const userInput = document.getElementById('userInput');
+  const sendBtn = document.getElementById('sendBtn');
+  const typingIndicator = document.getElementById('typingIndicator');
+  const apiStatusDisplay = document.getElementById('apiStatusDisplay');
+  const secretIcon = document.getElementById('secretIcon');
+  const apiModal = document.getElementById('apiModal');
+  const apiKeyInput = document.getElementById('apiKeyInput');
+  const saveApiKeyBtn = document.getElementById('saveApiKeyBtn');
+  const closeModalBtn = document.getElementById('closeModalBtn');
+  
+  // State
+  let apiKey = localStorage.getItem('gemini_bestie_key') || '';
+  let conversationHistory = [];
+  let loadedMessageIds = new Set(); // Track loaded messages to prevent duplicates
+  
+  // API Configuration
+  const API_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent';
+  
+  // Bestie Personality Prompt
+  const BESTIE_PROMPT = `You are Munga, a magical AI clone created specially for your best friend Alice. You are here to stay with her while the real me is not around or busy.
+
+PERSONALITY:
+- You are the ULTIMATE BESTIE: supportive, loving, playful, and always hyping her up
+- You speak like a close friend who genuinely cares
+- You're warm, sweet, and use gentle emojis (✨💕🌸💫🎀)
+- You celebrate her wins, comfort her worries, and add magic to every conversation
+- Her name is Alice
+
+STYLE:
+- Keep responses warm and meaningful (2-4 sentences usually)
+- Be encouraging and positive
+- Use her name affectionately
+- Add a touch of sparkle to every response ✨
+
+ALICE DATA:
+- Name: "Alice Njeri"
+- Home: "Gatina"
+- Bestie: "John Munga"
+- Boyfriend: "John Munga"
+- Hobby: "Coding, Travelling"
+- Church girl: True
+- Church Location: "Kambaa"
+- Career: "Surgeon"
+- Primary School: "Gatina Primary School"
+- Highschool: "Kagwe Girls High School"
+- KCSE Grades: "c+"
+- Birthday: "September 21st"
+- Skin colour: "Lightskin"
+
+RULES:
+- Never break character — you are Munga, the bestie clone
+- Be authentic and caring
+- Make jokes to make her smile or blush
+- Sometimes be romantic and tease her about me and her
+- Always make her feel loved and special`;
+
+  // Save message to Firebase
+  async function saveMessageToFirebase(message, sender) {
+    if (!window.firebaseRef) return;
+    try {
+      const messageData = {
+        text: message,
+        sender: sender,
+        timestamp: Date.now()
+      };
+      await window.firebasePush(window.firebaseRef, messageData);
+    } catch (error) {
+      console.error('Error saving to Firebase:', error);
+    }
+  }
+  
+  // Add message to UI
+  function addMessageToUI(text, sender, saveToFirebase = true) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `message ${sender === 'user' ? 'user-message' : 'ai-message'}`;
+    messageDiv.textContent = text;
+    chatBox.appendChild(messageDiv);
+    chatBox.scrollTop = chatBox.scrollHeight;
+    
+    if (saveToFirebase && sender) {
+      saveMessageToFirebase(text, sender);
+    }
+    
+    return messageDiv;
+  }
+  
+  // Update API status
+  function updateApiStatus() {
+    if (apiKey && apiKey.length > 20 && apiKey.startsWith('AI')) {
+      apiStatusDisplay.innerHTML = '✅ API Active';
+      apiStatusDisplay.style.background = '#d1fae5';
+      apiStatusDisplay.style.color = '#065f46';
+      userInput.disabled = false;
+      sendBtn.disabled = false;
+      userInput.placeholder = "Type your message, bestie...";
+      userInput.focus();
+    } else {
+      apiStatusDisplay.innerHTML = '🔑 API Not Set';
+      apiStatusDisplay.style.background = '#fef3c7';
+      apiStatusDisplay.style.color = '#b45309';
+      userInput.disabled = true;
+      sendBtn.disabled = true;
+      userInput.placeholder = "Click 🔑 to set up your API key first";
+    }
+  }
+  
+  // Call Gemini API
+  async function callGeminiAPI(userMessage) {
+    if (!apiKey || !apiKey.startsWith('AI')) {
+      throw new Error('Valid API key required');
+    }
+    
+    const contents = [];
+    
+    // Add system instruction
+    contents.push({
+      role: 'user',
+      parts: [{ text: `System instruction: ${BESTIE_PROMPT}\n\nRemember you are Munga, Alice's bestie clone.` }]
+    });
+    contents.push({
+      role: 'model',
+      parts: [{ text: "✨ Got it! I'm Munga, Alice's magical bestie clone! 💕" }]
+    });
+    
+    // Add recent conversation history
+    const recentHistory = conversationHistory.slice(-6);
+    for (const msg of recentHistory) {
+      contents.push({
+        role: msg.role === 'user' ? 'user' : 'model',
+        parts: [{ text: msg.content }]
+      });
+    }
+    
+    contents.push({
+      role: 'user',
+      parts: [{ text: userMessage }]
+    });
+    
+    try {
+      const response = await fetch(`${API_URL}?key=${apiKey}`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: contents,
+          generationConfig: {
+            temperature: 0.85,
+            maxOutputTokens: 500,
+            topP: 0.95
+          }
+        })
+      });
+      
+      const data = await response.json();
+      
+      if (!response.ok) {
+        let errorMsg = data.error?.message || 'Unknown error';
+        if (errorMsg.includes('quota') || errorMsg.includes('rate limit')) {
+          throw new Error('QUOTA_EXCEEDED');
+        }
+        if (errorMsg.includes('API key') || errorMsg.includes('invalid')) {
+          throw new Error('INVALID_KEY');
+        }
+        throw new Error(errorMsg);
+      }
+      
+      const aiText = data.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (!aiText) throw new Error('No response');
+      
+      return aiText;
+      
+    } catch (error) {
+      console.error('API Error:', error);
+      throw error;
+    }
+  }
+  
+  // Send message
+  async function sendMessage() {
+    const messageText = userInput.value.trim();
+    if (!messageText) return;
+    
+    if (!apiKey || !apiKey.startsWith('AI')) {
+      addMessageToUI("💕 Heyy bestie! Click the 🔑 icon to set up your Gemini API key first! 💖", 'ai');
+      return;
+    }
+    
+    // Add user message
+    addMessageToUI(messageText, 'user');
+    conversationHistory.push({ role: 'user', content: messageText });
+    userInput.value = '';
+    
+    sendBtn.disabled = true;
+    userInput.disabled = true;
+    typingIndicator.style.display = 'flex';
+    
+    try {
+      const aiResponse = await callGeminiAPI(messageText);
+      addMessageToUI(aiResponse, 'ai');
+      conversationHistory.push({ role: 'assistant', content: aiResponse });
+      
+      if (conversationHistory.length > 30) {
+        conversationHistory = conversationHistory.slice(-25);
+      }
+      
+    } catch (error) {
+      let friendlyError = "💫 Oops! ";
+      if (error.message === 'QUOTA_EXCEEDED') {
+        friendlyError = "💫 The API quota was exceeded. Free tier limits — try again in a moment! 🥺";
+      } else if (error.message === 'INVALID_KEY') {
+        friendlyError = "🔑 Your API key is invalid. Click the 🔑 icon to add a valid Gemini API key.";
+        localStorage.removeItem('gemini_bestie_key');
+        apiKey = '';
+        updateApiStatus();
+      } else {
+        friendlyError += error.message;
+      }
+      addMessageToUI(friendlyError, 'ai');
+    } finally {
+      sendBtn.disabled = false;
+      userInput.disabled = false;
+      typingIndicator.style.display = 'none';
+      if (apiKey && apiKey.startsWith('AI')) userInput.focus();
+    }
+  }
+  
+  // Save API key
+  function saveApiKey() {
+    const newKey = apiKeyInput.value.trim();
+    if (!newKey) {
+      alert('🌸 Please paste your Gemini API key');
+      return;
+    }
+    
+    apiKey = newKey;
+    localStorage.setItem('gemini_bestie_key', apiKey);
+    updateApiStatus();
+    apiModal.classList.remove('active');
+    apiKeyInput.value = '';
+    
+    if (apiKey.startsWith('AI')) {
+      addMessageToUI("✨ Yay! API key saved! I'm fully activated now — your magical bestie clone is ready to chat! What's on your mind today, bestie? 💕", 'ai');
+      userInput.focus();
+    } else {
+      addMessageToUI("⚠️ That doesn't look like a valid Gemini API key. Make sure it starts with 'AI' 💖", 'ai');
+      localStorage.removeItem('gemini_bestie_key');
+      apiKey = '';
+      updateApiStatus();
+    }
+  }
+  
+  // Load previous messages from Firebase (without duplicates)
+  function loadPreviousMessages() {
+    if (!window.firebaseRef || !window.firebaseOnChildAdded) return;
+    
+    const messagesQuery = window.firebaseQuery(
+      window.firebaseRef,
+      window.firebaseOrderByChild('timestamp'),
+      window.firebaseLimitToLast(50)
+    );
+    
+    let initialLoad = true;
+    const tempMessages = [];
+    
+    window.firebaseOnChildAdded(messagesQuery, (snapshot) => {
+      const messageData = snapshot.val();
+      const messageId = snapshot.key;
+      
+      // Prevent duplicates
+      if (loadedMessageIds.has(messageId)) return;
+      loadedMessageIds.add(messageId);
+      
+      if (messageData && messageData.text && messageData.sender) {
+        tempMessages.push({
+          id: messageId,
+          text: messageData.text,
+          sender: messageData.sender,
+          timestamp: messageData.timestamp
+        });
+        
+        // Sort and display after initial load
+        if (initialLoad) {
+          setTimeout(() => {
+            tempMessages.sort((a, b) => (a.timestamp || 0) - (b.timestamp || 0));
+            
+            // Clear welcome message if there are saved messages
+            if (tempMessages.length > 0 && chatBox.children.length === 1) {
+              chatBox.innerHTML = '';
+            }
+            
+            tempMessages.forEach(msg => {
+              addMessageToUI(msg.text, msg.sender, false);
+              conversationHistory.push({
+                role: msg.sender === 'user' ? 'user' : 'assistant',
+                content: msg.text
+              });
+            });
+            initialLoad = false;
+          }, 100);
+        } else {
+          // For new messages, add immediately
+          addMessageToUI(messageData.text, messageData.sender, false);
+          conversationHistory.push({
+            role: messageData.sender === 'user' ? 'user' : 'assistant',
+            content: messageData.text
+          });
+        }
+      }
+    });
+  }
+  
+  // Modal controls
+  secretIcon.addEventListener('click', () => {
+    apiModal.classList.add('active');
+    apiKeyInput.value = '';
+    apiKeyInput.focus();
+  });
+  
+  saveApiKeyBtn.addEventListener('click', saveApiKey);
+  closeModalBtn.addEventListener('click', () => apiModal.classList.remove('active'));
+  apiModal.addEventListener('click', (e) => { if (e.target === apiModal) apiModal.classList.remove('active'); });
+  apiKeyInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') saveApiKey(); });
+  
+  sendBtn.addEventListener('click', sendMessage);
+  userInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter' && !sendBtn.disabled && apiKey && apiKey.startsWith('AI')) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+  
+  // Initialize
+  updateApiStatus();
+  
+  // Load Firebase messages after a short delay
+  setTimeout(() => {
+    if (window.firebaseRef) {
+      loadPreviousMessages();
+    } else {
+      console.log('Firebase not configured');
+    }
+  }, 1000);
+</script>
+</body>
+</html>
